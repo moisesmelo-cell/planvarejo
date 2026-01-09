@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xertica - Geração de Demanda (Varejo)</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Paleta Brand 50 - Foco Varejo */
+            --brand-cyan-50: #00BEFF;
+            --brand-green-50: #C0FF7D;
+            --brand-pink-50: #FF89FF;
+            
+            /* Backgrounds */
+            --bg-dark: #0a1014;
+            --bg-card: rgba(19, 27, 34, 0.90);
+            --text-white: #ffffff;
+            --text-gray: #b0b0b0;
+            
+            /* Gradientes */
+            --grad-cyan-green: linear-gradient(135deg, #00BEFF 0%, #C0FF7D 100%);
+            --grad-green-pink: linear-gradient(135deg, #C0FF7D 0%, #FF89FF 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 50%, rgba(0, 190, 255, 0.05) 0%, transparent 70%), url('https://i.imgur.com/eqSILLR.png');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+        }
+
+        h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif; font-weight: 700; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* Cabeçalho */
+        header {
+            padding: 30px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo img { height: 40px; width: auto; }
+
+        .status-badge {
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            background: rgba(255, 137, 255, 0.15);
+            border: 1px solid var(--brand-pink-50);
+            border-radius: 4px;
+            color: var(--brand-pink-50);
+            font-weight: 600;
+        }
+
+        /* Secção Hero */
+        .hero { padding: 80px 0; text-align: center; }
+
+        .strategy-badge {
+            display: inline-block;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            color: var(--bg-dark);
+            background: var(--brand-cyan-50);
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 0 15px rgba(0, 190, 255, 0.3);
+        }
+
+        .hero h1 { font-size: clamp(2.2rem, 8vw, 3.8rem); margin-bottom: 10px; line-height: 1.1; }
+        .hero h1 span {
+            background: var(--grad-cyan-green);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--text-white);
+            margin-bottom: 30px;
+            font-weight: 300;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Exibição de Cadência */
+        .cadence-display {
+            display: inline-flex;
+            gap: 20px;
+            background: rgba(255,255,255,0.05);
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .cadence-item { display: flex; align-items: center; color: #ccc; font-size: 0.9rem; }
+        .cadence-item i { margin-right: 8px; color: var(--brand-pink-50); }
+
+        /* Secções e Layout */
+        section { padding: 70px 0; }
+        .section-header { margin-bottom: 50px; text-align: center; }
+        .section-title { font-size: 2.3rem; margin-bottom: 15px; display: inline-block; position: relative; }
+        .section-title::after {
+            content: ''; display: block; width: 60px; height: 4px;
+            background: var(--brand-pink-50); margin: 15px auto 0; border-radius: 2px;
+        }
+        .section-desc { color: #ddd; max-width: 700px; margin: 0 auto; }
+
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+
+        .card {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--brand-pink-50); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+
+        /* Itens da Cronologia */
+        .timeline-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 24px;
+            top: 50px;
+            bottom: -30px;
+            width: 2px;
+            background: rgba(255,255,255,0.1);
+            z-index: 0;
+        }
+        .timeline-item:last-child::before { display: none; }
+        
+        .date-badge {
+            width: 50px;
+            height: 50px;
+            background: #1a1f24;
+            border: 1px solid var(--brand-cyan-50);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            z-index: 1;
+            font-weight: bold;
+            color: var(--brand-cyan-50);
+            font-size: 0.8rem;
+            line-height: 1;
+        }
+        .date-badge span { font-size: 1.1rem; }
+        
+        .timeline-content {
+            flex-grow: 1;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+        .timeline-content:hover { background: rgba(255,255,255,0.06); border-color: var(--brand-green-50); }
+        
+        .timeline-tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .tag-lp { background: rgba(0, 190, 255, 0.2); color: var(--brand-cyan-50); }
+        .tag-onepage { background: rgba(192, 255, 125, 0.2); color: #8bc34a; }
+        .tag-wp { background: rgba(192, 255, 125, 0.2); color: #c0ff7d; border: 1px solid rgba(192, 255, 125, 0.3); }
+        .tag-pod { background: rgba(255, 137, 255, 0.2); color: var(--brand-pink-50); }
+        .tag-case { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .tag-calc { background: var(--grad-cyan-green); color: #000; }
+
+        /* Lista de Conteúdo */
+        .content-list-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        .content-list-item i { width: 25px; color: var(--brand-green-50); }
+
+        /* KPIs */
+        .kpi-box {
+            text-align: center;
+            padding: 25px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        .kpi-box:hover { background: rgba(255,255,255,0.05); }
+        .kpi-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 10px 0;
+            background: var(--grad-green-pink);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .kpi-label { color: #fff; font-size: 0.9rem; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; }
+
+        /* Caixa de Lead Scoring */
+        .lead-score-box {
+            background: linear-gradient(135deg, rgba(0, 190, 255, 0.1) 0%, rgba(192, 255, 125, 0.1) 100%);
+            border: 1px solid var(--brand-green-50);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .text-gradient {
+            background: var(--grad-cyan-green);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="https://storage.googleapis.com/etp-bucket/Logos%20Xertica.ai%20%28.png%29/xertica.ai/Copy%20of%20Logo_XERTICA_white.png" alt="Xertica.ai Logo" onerror="this.src='https://placehold.co/150x50/000000/FFFFFF/png?text=Xertica+Logo'">
+            </div>
+            <div class="status-badge">Calendário Editorial • Varejo 2026</div>
+        </header>
+    </div>
+
+    <!-- Secção Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="strategy-badge">Retail Lead Generation</div>
+
+            <h1>Demanda para o <span class="text-gradient">Varejo</span></h1>
+            <p class="hero-subtitle">Nutrição estratégica baseada em tendências, segurança e conversão escalável para o retalho moderno.</p>
+
+            <div class="cadence-display">
+                <div class="cadence-item"><i class="fa-solid fa-calendar-check"></i> Plano: <strong>Q1/Q2 2026</strong></div>
+                <div class="cadence-item"><i class="fa-solid fa-filter"></i> Foco: <strong>MQL para SQL</strong></div>
+                <div class="cadence-item"><i class="fa-solid fa-microchip"></i> Tecnologia: <strong>GenAI & Cloud</strong></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Estratégia e Cronograma Retail -->
+    <section>
+        <div class="container">
+            <div class="grid-2">
+                
+                <!-- Coluna Esquerda: Mecânicas -->
+                <div>
+                    <h3 style="color: var(--brand-pink-50); margin-bottom: 20px;">Mecânicas de Conversão</h3>
+                    <p style="color: #ccc; margin-bottom: 25px;">
+                        Cada peça de conteúdo foi desenhada para uma etapa específica da jornada, utilizando canais diretos para capturar intenção comercial.
+                    </p>
+                    
+                    <div class="content-list-item"><i class="fa-solid fa-link"></i> Landing Pages com Captação de Dados</div>
+                    <div class="content-list-item"><i class="fa-solid fa-envelope-open-text"></i> Email Marketing com Cortes de Podcast</div>
+                    <div class="content-list-item"><i class="fa-solid fa-file-contract"></i> Whitepapers & One Pages Estratégicos</div>
+                    <div class="content-list-item"><i class="fa-solid fa-calculator"></i> Ferramentas Interativas de ROI</div>
+                    
+                    <div class="card" style="margin-top: 30px; background: rgba(0, 190, 255, 0.05);">
+                        <h4 style="color: white; margin-bottom: 10px;">Objetivo Janeiro/Maio</h4>
+                        <p style="font-size: 0.9rem; color: #aaa;">
+                            Estabelecer autoridade em IA Generativa e Segurança, culminando em ferramentas de cálculo de valor para acelerar o fechamento de propostas no setor retalhista.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Coluna Direita: Cronograma Visual -->
+                <div>
+                    <h3 style="color: var(--brand-cyan-50); margin-bottom: 20px;">Plano de Conteúdos Detalhado</h3>
+                    
+                    <!-- 15/01 -->
+                    <div class="timeline-item">
+                        <div class="date-badge">15<span>JAN</span></div>
+                        <div class="timeline-content">
+                            <span class="timeline-tag tag-lp">Landing Page • Relatório</span>
+                            <strong style="display:block; color:white; font-size: 1.05rem;">Tendências de IA para 2026</strong>
+                            <p style="font-size: 0.9rem; color: #aaa; margin-top: 5px;">
+                                Guia para CIOs: O que esperar da GenAI e da Nuvem. Foco em captação de leads via landing page.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 30/01 -->
+                    <div class="timeline-item">
+                        <div class="date-badge">30<span>JAN</span></div>
+                        <div class="timeline-content" style="border-left: 3px solid var(--brand-green-50);">
+                            <span class="timeline-tag tag-onepage">One Page</span>
+                            <strong style="display:block; color:white; font-size: 1.05rem;">IA e Conversão: Personalização em Escala</strong>
+                            <p style="font-size: 0.9rem; color: #aaa; margin-top: 5px;">
+                                Como aumentar a conversão no varejo utilizando modelos de escala personalizados. Formato sintetizado para consumo rápido.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 15/02 -->
+                    <div class="timeline-item">
+                        <div class="date-badge">15<span>FEV</span></div>
+                        <div class="timeline-content">
+                            <span class="timeline-tag tag-pod">Podcast • E-mail Marketing</span>
+                            <strong style="display:block; color:white; font-size: 1.05rem;">Segurança e Governança na Era dos Agentes</strong>
+                            <p style="font-size: 0.9rem; color: #aaa; margin-top: 5px;">
+                                Distribuição via e-mail marketing utilizando cortes estratégicos do podcast sobre o tema.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 28/02 -->
+                    <div class="timeline-item">
+                        <div class="date-badge">28<span>FEV</span></div>
+                        <div class="timeline-content" style="border-left: 3px solid var(--brand-green-50);">
+                            <span class="timeline-tag tag-wp">Whitepaper • Caso de Uso</span>
+                            <strong style="display:block; color:white; font-size: 1.05rem;">Como o varejo usa IA para fidelizar clientes</strong>
+                            <p style="font-size: 0.9rem; color: #aaa; margin-top: 5px;">
+                                Foco em pós-venda e retenção. Demonstração técnica de como a Xertica auxilia empresas a utilizarem IA para fidelizar clientes e otimizar o pós-venda.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 15/05 -->
+                    <div class="timeline-item">
+                        <div class="date-badge">15<span>MAI</span></div>
+                        <div class="timeline-content" style="border: 1px solid var(--brand-green-50);">
+                            <span class="timeline-tag tag-calc">Calculadora Interativa</span>
+                            <strong style="display:block; color:white; font-size: 1.05rem;">Ganhos com Redução de Churn e Fidelização</strong>
+                            <p style="font-size: 0.9rem; color: #aaa; margin-top: 5px;">
+                                Ferramenta de autodiagnóstico: Descubra quanto sua empresa pode ganhar com IA.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Indicadores de Desempenho Atualizados -->
+    <section style="background: rgba(0,0,0,0.3);">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Indicadores de Desempenho</h2>
+                <p class="section-desc">Métricas e benchmarks de sucesso projetados para este plano de geração de demanda.</p>
+            </div>
+
+            <div class="grid-3">
+                <!-- Click Rate -->
+                <div class="kpi-box">
+                    <i class="fa-solid fa-hand-pointer" style="font-size: 1.2rem; color: var(--brand-cyan-50); margin-bottom: 10px;"></i>
+                    <div class="kpi-label">Click Rate</div>
+                    <div class="kpi-value">> 10%</div>
+                    <p style="font-size: 0.8rem; color: #ccc;">Taxa de Clique (Benchmark B2B)</p>
+                </div>
+
+                <!-- Objetivo Final -->
+                <div class="kpi-box" style="border-color: var(--brand-green-50);">
+                    <i class="fa-solid fa-calendar-check" style="font-size: 1.2rem; color: var(--brand-green-50); margin-bottom: 10px;"></i>
+                    <div class="kpi-label">Objetivo Final</div>
+                    <div class="kpi-value">10%</div>
+                    <p style="font-size: 0.8rem; color: #ccc;">Conversão em Reunião (Leads Nutridos)</p>
+                </div>
+
+                <!-- Qualificação -->
+                <div class="kpi-box">
+                    <i class="fa-solid fa-filter-circle-check" style="font-size: 1.2rem; color: var(--brand-pink-50); margin-bottom: 10px;"></i>
+                    <div class="kpi-label">Qualificação</div>
+                    <div class="kpi-value">MQL</div>
+                    <p style="font-size: 0.8rem; color: #ccc;">Leads Qualificados pelo Marketing</p>
+                </div>
+            </div>
+
+            <!-- Lead Scoring Note -->
+            <div class="lead-score-box">
+                <h4 style="color: var(--brand-green-50); margin-bottom: 10px;"><i class="fa-solid fa-bullseye"></i> Regra de Passagem (Varejo)</h4>
+                <p style="color: #ddd; font-size: 0.95rem;">
+                    O atingimento do status de <strong>MQL</strong> é automatizado via Lead Scoring, priorizando leads que interagem com o Whitepaper de Fidelização ou a Calculadora de ROI para o time de vendas (SDR).
+                </p>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
